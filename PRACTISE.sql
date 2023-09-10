@@ -33,8 +33,7 @@ WHERE NOT birth_date>'1990-01-01' OR points>=1000 AND state='VA' */
 -- SELECT * FROM order_items WHERE order_id=6 AND (unit_price*quantity>30);
 
 -- SELECT * FROM customers WHERE state='VA' OR state='VL' OR state='FL';
--- insted of above we can write the query as below usin in operator
--- SELECT * FROM customers WHERE state IN('VA','VL','FL');-- THE both statements are true but it is simple
+-- insted of above we can write the query as below usin in operatorSELECT * FROM customers WHERE state IN('VA','VL','FL');-- THE both statements are true but it is simple
 -- if we replce the NOT IN in tht postion of IN then it will take the values that we have not entered;
 -- SELECT * FROM products WHERE quantity_in_stock IN(49,38,72)
 
@@ -45,7 +44,7 @@ SELECT * FROM customers WHERE birth_date BETWEEN '1990-01-01' AND '2000-01-01'
 */
 /* -- LIKE OPERATOR USED TO RETRIVE THE VALUE THAT MATCH A ROW WITH THE SPECIFIC STRING PATTERN
 SELECT * FROM customers WHERE last_name LIKE "b%";-- IT RETRIEVES THE LETTER STARTING WITH THE LETTER B
-SELECT * FROM customers WHERE last_name LIKE "B%";-- IT RETRIEVES THE LETTER ENDING WITH THE LETTER B
+SELECT * FROM customers WHERE last_name LIKE "%y";-- IT RETRIEVES THE LETTER ENDING WITH THE LETTER B
 SELECT * FROM customers WHERE last_name LIKE "%b%";-- IT RETRIEVES THE ALL LETTER START OR END WITH THE LETTER B
 -- %-used to denote any number of characters 
 -- _ -used to denote single characters
@@ -95,7 +94,9 @@ SELECT * FROM customers ORDER BY first_name DESC;
 SELECT * FROM order_items WHERE order_id=2 ORDER BY quantity*unit_price DESC;
 */
 
-/* -- LIMIT
+/*-- LIMIT
+
+
 SELECT * FROM customers LIMIT 3;
 SELECT * FROM customers LIMIT 6,4;-- here this query says that it skips the first 6 records and
 -- then chooses the remaining 4 records as given
@@ -361,9 +362,48 @@ JOIN invoices i
     WHERE payment_date IS NOT NULL;
 */
 
--- UPDATING A SINGLE ROW
-  
 
+/*
+-- UPDATING A SINGLE ROW
+use store;
+UPDATE customers SET first_name="ram" WHERE customer_id=1;
+-- UPDATING MULTIPLE ROWS IN A TABLE
+use invoicing;
+UPDATE invoices SET payment_total=invoice_total*0.5 WHERE client_id IN (3,2);
+
+USE store;
+UPDATE customers 
+SET points=points+50 
+WHERE birth_date< '1990-01-01';
+
+*/
+
+/*
+-- to get second largest element
+SELECT MAX(customer_id) FROM customers WHERE customer_id NOT IN (SELECT MAX(customer_id) FROM customers);
+*/
+
+/*
+-- using subqueries in update
+
+USE invoicing;
+UPDATE invoices SET payment_total=invoice_total*0.5,payment_date=due_date WHERE client_id IN
+(SELECT * FROM invoices WHERE name="Myworks");
+
+USE store;
+UPDATE orders SET comments='Gold customers' WHERE customer_id IN (SELECT customer_id FROM customers WHERE points>3000);
+
+UPDATE invoices SET payment_total=invoice_total*0.5,payment_date=due_date WHERE payment_date IS NULL;
+*/
+/*
+-- DELETING ROWS
+
+USE invoicing;
+
+DELETE FROM invoices WHERE client_id IN (
+       SELECT client_id FROM clients WHERE name='Myworks');
+  
+*/
 
 
 
